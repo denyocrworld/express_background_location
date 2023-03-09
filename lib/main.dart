@@ -35,12 +35,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    BackgroundAction.duration = const Duration(seconds: 1);
-    await BackgroundAction.runForegroundMode(
+    ForegroundAction.duration = const Duration(seconds: 1);
+    await ForegroundAction.runForegroundMode(
       notificationId: "my_notification",
       notificationTitle: "Background Location is Running",
       notificationDescription: "Background Location is Running",
     );
+    // await BackgroundAction.stop();
   } on Exception catch (err) {
     print(err);
   }

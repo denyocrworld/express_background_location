@@ -33,7 +33,7 @@ onStart(service) async {
   });
 
   // bring to foreground
-  Timer.periodic(BackgroundAction.duration, (timer) async {
+  Timer.periodic(ForegroundAction.duration, (timer) async {
     if (service is AndroidServiceInstance) {
       if (await service.isForegroundService()) {
         Position position = await Geolocator.getCurrentPosition();
@@ -66,9 +66,14 @@ onStart(service) async {
   });
 }
 
-class BackgroundAction {
+class ForegroundAction {
+  static FlutterBackgroundService service = FlutterBackgroundService();
   static Duration duration = const Duration(seconds: 1);
   static late Function(Position position)? onForegroundLocation;
+
+  static stop() async {
+    service.invoke("stopService");
+  }
 
   static runForegroundMode({
     required String notificationId,
@@ -92,7 +97,6 @@ class BackgroundAction {
           ?.createNotificationChannel(channel);
 
       await checkPermissions();
-      final service = FlutterBackgroundService();
       await service.configure(
         androidConfiguration: AndroidConfiguration(
           // this will be executed when app is in foreground or background in separated isolate
